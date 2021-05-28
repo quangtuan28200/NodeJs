@@ -1,7 +1,29 @@
+
+const Course = require('../models/Cource');
+const {multipleMongooseToObject} = require('../../util/mongoose');
+
 class SiteController {
     //URL: ../news
-    index(req, res) {
-        res.render('home');
+    index(req, res, next) {
+
+        //GET model
+        //goi bang callback
+        // Course.find({}, function (err, courses) {  
+        //     if(!err){
+        //         res.json(courses);
+        //     }else{
+        //         next(err);
+        //     }
+        // });
+
+        //goi bang promise
+        Course.find({})
+            .then(courses => {
+                res.render('home', { 
+                    courses: multipleMongooseToObject(courses)
+                });
+            })
+            .catch(next);
     }
 
     //URL: ../news/:slug
