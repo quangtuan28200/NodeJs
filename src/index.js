@@ -2,6 +2,8 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const exphbs = require('express-handlebars');
+const methodOverride = require('method-override');
+
 const app = express();
 const port = 3000;
 
@@ -10,6 +12,7 @@ const db = require('./config/db');
 
 //Connect to db
 db.connect();
+
 
 //Config static file
 app.use(express.static(path.join(__dirname, 'public')));
@@ -20,6 +23,10 @@ app.use(
         extended: true,
     })
 );
+
+//method_overwrite
+app.use(methodOverride('_method'));
+
 //middleware luu lai nhung parameter khi dung JS
 app.use(express.json());
 
@@ -28,6 +35,10 @@ app.engine(
     'hbs',
     exphbs({
         extname: '.hbs', // dat lai duoi file cho ngan gon
+        //tao ra cac ham xu ly theo y muon
+        helpers: {
+            sum: (a ,b) => a + b,
+        }
     })
 );
 app.set('view engine', 'hbs');
@@ -49,5 +60,3 @@ route(app);
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
-
-var a = ['a', 'b'];
